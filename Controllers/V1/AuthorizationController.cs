@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IssueTracker.Controllers.V1
 {
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,  Roles = "SuperAdmin, Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,  Roles = "SuperAdmin")]
     public class AuthorizationController : Controller
     {
         private readonly Services.IAuthorizationService auth;

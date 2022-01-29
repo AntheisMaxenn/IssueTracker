@@ -1,8 +1,13 @@
-﻿using IssueTracker.Contracts.V1.Responses;
+﻿using AutoMapper;
+using IssueTracker.Contracts.V1.Requests;
+using IssueTracker.Contracts.V1.Responses;
 using IssueTracker.Data;
 using IssueTracker.Domain;
 using IssueTracker.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace IssueTracker.Services.Implementations
 {
@@ -11,18 +16,31 @@ namespace IssueTracker.Services.Implementations
         private readonly IssueTrackerDbContext context;
         private readonly ILogger<ActionService> logger;
         private readonly IIssueService issueService;
+        private readonly IMapper mapper;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public ActionService(IssueTrackerDbContext context, ILogger<ActionService> logger, IIssueService issueService)
+        public ActionService(IssueTrackerDbContext context, ILogger<ActionService> logger, IIssueService issueService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             this.context = context;
             this.logger = logger;
             this.issueService = issueService;
+            this.mapper = mapper;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<CommandResponse> CreateAction(Data.Action action)
+        public async Task<CommandResponse> CreateAction(ActionRequest actionRequest)
         {
             try
             {
+
+                //if (claimValue == null) return new CommandResponse
+                //{
+                //    Errors = new[] { $"Error authenticating user id." }
+                //};
+                //actionRequest.EmployeeId = claimValue;
+
+
+                var action = mapper.Map<Data.Action>(actionRequest);
                 context.Add(action);
 
                 await context.SaveChangesAsync();

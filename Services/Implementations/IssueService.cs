@@ -5,6 +5,7 @@ using IssueTracker.Data;
 using IssueTracker.Domain;
 using IssueTracker.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace IssueTracker.Services.Implementations
 {
@@ -13,14 +14,16 @@ namespace IssueTracker.Services.Implementations
         private readonly IssueTrackerDbContext context;
         private readonly IMapper mapper;
         private readonly ILogger<IssueService> logger;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         // Controller will call IssueExists() its self, if required.
 
-        public IssueService(IssueTrackerDbContext context, IMapper mapper, ILogger<IssueService> logger)
+        public IssueService(IssueTrackerDbContext context, IMapper mapper, ILogger<IssueService> logger, IHttpContextAccessor httpContextAccessor)
         {
             this.context = context;
             this.mapper = mapper;
             this.logger = logger;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<CommandResponse> CreateIssueAction(IssueRequest newIssueRequest)
@@ -225,8 +228,10 @@ namespace IssueTracker.Services.Implementations
             try
             {
                 var issue = await context.Issues
-                        //.Where(x => x.IssueId == issueId)
-                        .Include(x => x.Actions)
+                        .Where(x => x.IssueId == issueId)
+                        //.Include(x => x.Actions)
+                        //.ThenInclude(x => x.Employee)
+                        //.ThenInclude(e => e.EmployeeId)
                         .Include(x => x.Machine)
                         .Include(x => x.Component)
                         .Include(x => x.Location)

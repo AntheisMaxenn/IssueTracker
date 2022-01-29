@@ -157,6 +157,9 @@ try{
 
     builder.Services.AddScoped<IIdentityService, IdentityService>();
     builder.Services.AddScoped<IssueTracker.Services.IAuthorizationService, AuthorizationService>();
+
+    //builder.Services.AddHttpContextAccessor();
+    builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
     #endregion
 
     #region Authorization and Policys

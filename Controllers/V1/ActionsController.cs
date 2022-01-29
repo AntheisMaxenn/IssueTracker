@@ -27,8 +27,11 @@ namespace IssueTracker.Controllers.V1
         [HttpPost(ApiRoutes.Action.Create)]
         public async Task<ActionResult> CreateAction([FromBody]ActionRequest actionRequest)
         {
-            var action = mapper.Map<Data.Action>(actionRequest);
-            var result = await service.CreateAction(action);
+            var identity = User.Claims.FirstOrDefault(x => x.Type == "id");
+            if (identity.Value == null) return BadRequest($"There was an Error.");
+            actionRequest.EmployeeId = identity.Value;
+
+            var result = await service.CreateAction(actionRequest);
             if (!result.Success) return BadRequest($"Unable to create Action.");
 
             return Accepted();

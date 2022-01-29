@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IssueTracker.Data
 {
@@ -10,6 +11,9 @@ namespace IssueTracker.Data
         public DateTime DateTime { get; set; }
         public int IssueId { get; set; }
 
+        public string EmployeeId { get; set; }
+
+        [ForeignKey(nameof(EmployeeId))]
         public virtual Employee Employee { get; set; } = null!;
         public virtual Issue Issue { get; set; } = null!;
     }

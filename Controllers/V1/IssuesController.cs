@@ -31,6 +31,9 @@ namespace IssueTracker.Controllers.V1
         [HttpPost(ApiRoutes.Issue.CreateIssueAction)]
         public async Task<ActionResult> CreateNewIssue(IssueRequest newIssueRequest)
         {
+            var identity = User.Claims.FirstOrDefault(x => x.Type == "id");
+            if (identity.Value == null) return BadRequest($"There was an Error.");
+            newIssueRequest.EmployeeId = identity.Value;
             var result = await issue.CreateIssueAction(newIssueRequest);
 
             if (!result.Success) return BadRequest("Create New Issue Failed.");

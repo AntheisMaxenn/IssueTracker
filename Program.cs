@@ -254,6 +254,7 @@ try{
     app.UseAuthorization();
     app.MapControllers();
 
+    app.UseCors();
     #endregion
 
     #region Seeding SuperAdmin
